@@ -3,10 +3,7 @@ import aboutImage from '../assets/about.jpg';
 
 const AboutUs = () => {
   return (
-    <div 
-      className="relative w-full h-screen p-6"
-    >
-      
+    <div className="relative w-full h-screen p-6">
       <div 
         className="absolute inset-0 bg-cover bg-center"
         style={{
@@ -19,7 +16,7 @@ const AboutUs = () => {
       {/* Overlay for dimming the background */}
       <div className="absolute inset-0 bg-black opacity-40"></div>
 
-      <div className="relative z-10">
+      <div className="relative z-10 text-center sm:text-left sm:w-4/5 sm:mx-auto sm:px-6">
         <h1 className="text-4xl font-semibold text-white mb-8">About Us</h1>
         <p className="text-lg text-white mb-6">
           Welcome to our travel agency. We are dedicated to providing the best travel packages
@@ -37,4 +34,3 @@ const AboutUs = () => {
 };
 
 export default AboutUs;
-

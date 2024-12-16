@@ -17,12 +17,23 @@ const PackageCard = ({ packageData }) => {
         <p className="text-lg font-bold text-indigo-600 mb-4">
           ${packageData.price}
         </p>
-        <Link
-          to={`/package/${packageData.id}`}
-          className="inline-block text-blue-600 hover:text-blue-800 font-medium text-lg transition duration-300"
-        >
-          View Details
-        </Link>
+        <div className="flex space-x-4">
+          {/* View Details Link */}
+          <Link
+            to={`/package/${packageData.id}`}
+            className="inline-block text-blue-600 hover:text-blue-800 font-medium text-lg transition duration-300"
+          >
+            View Details
+          </Link>
+
+          {/* Book Now Button */}
+          <Link
+            to={`/book/${packageData.id}`}
+            className="inline-block bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-800 font-medium text-lg transition duration-300"
+          >
+            Book Now
+          </Link>
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo from "../assets/logo.webp";  // Path to logo
+import logo from "../assets/logo.webp"; // Path to logo
 
 const Navbar = () => {
   return (
@@ -7,10 +7,10 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto flex justify-between items-center py-4 px-6">
         <div className="flex items-center">
           {/* Logo with border, rounded corners, and subtle shadow */}
-          <img 
-            src={logo} 
-            alt="WanderQuest Logo" 
-            className="h-12 w-auto mr-4 rounded-lg shadow-lg border-2 border-sage-green" 
+          <img
+            src={logo}
+            alt="WanderQuest Logo"
+            className="h-12 w-auto mr-4 rounded-lg shadow-lg border-2 border-sage-green"
           />
           <span className="text-2xl font-semibold text-sage-green">
             WanderQuest
@@ -24,7 +24,7 @@ const Navbar = () => {
             Home
           </Link>
           <Link
-            to="/packages"
+            to="/yadhu"
             className="text-white hover:text-beige transition duration-300 text-lg"
           >
             Packages
@@ -40,6 +40,13 @@ const Navbar = () => {
             className="text-white hover:text-beige transition duration-300 text-lg"
           >
             Contact
+          </Link>
+          {/* Add Booking Link */}
+          <Link
+            to="/book"
+            className="text-white bg-sage-green py-2 px-4 rounded-lg hover:bg-beige transition duration-300 text-lg font-medium"
+          >
+            Book Now
           </Link>
         </div>
       </div>

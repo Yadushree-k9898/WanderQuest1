@@ -1,49 +1,33 @@
-// 
+//
 
 // packageRoutes.js
 
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Package = require('../models/Package'); // Ensure path is correct
+const Package = require("../models/Package"); // Ensure path is correct
 
-// POST route: Add a new package
-router.post('/packages', async (req, res) => {
+
+
+// GET route: List all packages
+router.get("/packages", async (req, res) => {
   try {
-    const newPackage = new Package(req.body);
-    const savedPackage = await newPackage.save();
-    res.status(201).json(savedPackage);
+    const packages = await Package.find(); // Fetch all packages from the database
+    res.json(packages); // Return the list of packages as JSON
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error.message }); // Handle errors
   }
 });
 
-// PUT route: Update a package by ID
-router.put('/packages/:id', async (req, res) => {
+// GET route: Get a single package by ID
+router.get("/packages/:id", async (req, res) => {
   try {
-    const updatedPackage = await Package.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
-    if (!updatedPackage) {
-      return res.status(404).json({ error: 'Package not found' });
+    const package = await Package.findById(req.params.id); // Find the package by ID
+    if (!package) {
+      return res.status(404).json({ error: "Package not found" });
     }
-    res.json(updatedPackage);
+    res.json(package); // Return the package data
   } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
-
-// DELETE route: Delete a package by ID
-router.delete('/packages/:id', async (req, res) => {
-  try {
-    const deletedPackage = await Package.findByIdAndDelete(req.params.id);
-    if (!deletedPackage) {
-      return res.status(404).json({ error: 'Package not found' });
-    }
-    res.json({ message: 'Package deleted successfully' });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error.message }); // Handle errors
   }
 });
 

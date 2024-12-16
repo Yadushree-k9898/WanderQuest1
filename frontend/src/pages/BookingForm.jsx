@@ -1,103 +1,45 @@
-import React, { useState } from "react";
-import { bookPackage } from "../services/api";
+import React, { useState } from 'react';
+import { bookPackage } from '../services/api';
 
 const BookingForm = ({ packageId }) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    numTravelers: 1,
-    specialRequests: "",
-  });
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const [userData, setUserData] = useState({ name: '', email: '' });
+  const [status, setStatus] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
+    setStatus('Booking in progress...');
+    
+    const result = await bookPackage(packageId, userData);
 
-    try {
-      const bookingData = await bookPackage(formData, packageId);
-      alert("Booking Successful");
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        numTravelers: 1,
-        specialRequests: "",
-      });
-    } catch (err) {
-      setError("Booking failed. Please try again.");
-    } finally {
-      setLoading(false);
+    if (result && result.message === 'Package booked successfully') {
+      setStatus('Booking successful!');
+    } else {
+      setStatus('Booking failed. Please try again.');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-sageGreen p-6 rounded-lg shadow-md space-y-4">
-      {error && <div className="text-red-600">{error}</div>}
-
-      <input
-        type="text"
-        name="name"
-        placeholder="Your Name"
-        value={formData.name}
-        onChange={handleChange}
-        className="border border-gunmetalGray p-2 w-full rounded"
-        required
-      />
-      <input
-        type="email"
-        name="email"
-        placeholder="Your Email"
-        value={formData.email}
-        onChange={handleChange}
-        className="border border-gunmetalGray p-2 w-full rounded"
-        required
-      />
-      <input
-        type="tel"
-        name="phone"
-        placeholder="Phone Number"
-        value={formData.phone}
-        onChange={handleChange}
-        className="border border-gunmetalGray p-2 w-full rounded"
-        required
-      />
-      <input
-        type="number"
-        name="numTravelers"
-        placeholder="Number of Travelers"
-        value={formData.numTravelers}
-        onChange={handleChange}
-        min="1"
-        className="border border-gunmetalGray p-2 w-full rounded"
-        required
-      />
-      <textarea
-        name="specialRequests"
-        placeholder="Special Requests"
-        value={formData.specialRequests}
-        onChange={handleChange}
-        className="border border-gunmetalGray p-2 w-full rounded"
-      />
-      <button
-        type="submit"
-        className="bg-charcoal text-white p-2 rounded hover:bg-gunmetalGray"
-        disabled={loading}
-      >
-        {loading ? "Booking..." : "Submit"}
-      </button>
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label htmlFor="name">Name:</label>
+        <input 
+          type="text" 
+          id="name" 
+          value={userData.name} 
+          onChange={(e) => setUserData({ ...userData, name: e.target.value })} 
+        />
+      </div>
+      <div>
+        <label htmlFor="email">Email:</label>
+        <input 
+          type="email" 
+          id="email" 
+          value={userData.email} 
+          onChange={(e) => setUserData({ ...userData, email: e.target.value })} 
+        />
+      </div>
+      <button type="submit">Book Now</button>
+      <p>{status}</p>
     </form>
   );
 };
