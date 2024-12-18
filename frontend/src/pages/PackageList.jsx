@@ -7,6 +7,7 @@ const PackageList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Fetching packages on component mount
   useEffect(() => {
     const getAllPackages = async () => {
       try {
@@ -49,9 +50,7 @@ const PackageList = () => {
 
   return (
     <div className="container mx-auto p-6 max-w-4xl">
-      <h1 className="text-4xl font-semibold text-charcoal mb-6">
-        Available Packages
-      </h1>
+      <h1 className="text-4xl font-semibold text-charcoal mb-6">Available Packages</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {packages.map((pkg) => (
           <div key={pkg._id} className="bg-beige rounded-lg shadow-xl p-4">
@@ -63,14 +62,10 @@ const PackageList = () => {
               />
             ) : (
               <div className="w-full h-64 bg-gray-200 rounded-lg mb-4 flex justify-center items-center">
-                <span className="text-lg text-gray-500">
-                  No Image Available
-                </span>
+                <span className="text-lg text-gray-500">No Image Available</span>
               </div>
             )}
-            <h2 className="text-2xl font-semibold text-charcoal mb-2">
-              {pkg.title}
-            </h2>
+            <h2 className="text-2xl font-semibold text-charcoal mb-2">{pkg.title}</h2>
             <p className="text-lg text-charcoal mb-4">{pkg.description}</p>
             <p className="text-xl font-bold text-charcoal">
               Price: <span className="text-sage-green">${pkg.price}</span>

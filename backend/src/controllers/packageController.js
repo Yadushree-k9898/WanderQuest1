@@ -1,42 +1,13 @@
-// const Package = require('../models/Package');
-
-// // Get all packages
-// exports.getAllPackages = async (req, res) => {
-//     try {
-//         const packages = await Package.find();
-//         res.json(packages);
-//     } catch (err) {
-//         res.status(500).send('Server Error');
-//     }
-// };
-
-// // Get a single package
-// exports.getPackageById = async (req, res) => {
-//     try {
-//         const package = await Package.findById(req.params.id);
-//         if (!package) {
-//             return res.status(404).json({ msg: 'Package not found' });
-//         }
-//         res.json(package);
-//     } catch (err) {
-//         res.status(500).send('Server Error');
-//     }
-// };
-
 const Package = require("../models/Package");
 
-// Admin credentials
+// Admin credentials (in a real app, use a database and hashing for passwords)
 const ADMIN_CREDENTIALS = { username: "admin", password: "password" };
 
-// Admin login
+// Admin login (simple login without token)
 exports.adminLogin = (req, res) => {
   try {
     const { username, password } = req.body;
-    if (
-      username === ADMIN_CREDENTIALS.username &&
-      password === ADMIN_CREDENTIALS.password
-    ) {
-      // Respond with a success message or token for authentication
+    if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
       res.json({ message: "Login successful" });
     } else {
       res.status(401).json({ message: "Invalid credentials" });
@@ -73,11 +44,8 @@ exports.getPackageById = async (req, res) => {
 // Middleware to authenticate admin
 const authenticateAdmin = (req, res, next) => {
   const { username, password } = req.body;
-  if (
-    username === ADMIN_CREDENTIALS.username &&
-    password === ADMIN_CREDENTIALS.password
-  ) {
-    next(); // Proceed to the next middleware/handler (package operations)
+  if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+    return next(); // Admin credentials are correct, proceed to next middleware or route handler
   } else {
     return res.status(401).json({ message: "Unauthorized access" });
   }
@@ -86,84 +54,49 @@ const authenticateAdmin = (req, res, next) => {
 // Add a new package (Admin-only access)
 exports.addPackage = async (req, res) => {
   try {
-    // Admin check
-    authenticateAdmin(req, res, async () => {
-      const pkg = new Package(req.body);
-      await pkg.save();
-      res.json(pkg);
-    });
+    const pkg = new Package(req.body);
+    await pkg.save();
+    res.json(pkg);
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ message: "Failed to create package", error: error.message });
+    res.status(500).json({ message: "Failed to create package", error: error.message });
   }
 };
 
 // Update an existing package (Admin-only access)
 exports.updatePackage = async (req, res) => {
   try {
-    // Admin check
-    authenticateAdmin(req, res, async () => {
-      const pkg = await Package.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-      });
-      if (!pkg) {
-        return res.status(404).json({ message: "Package not found" });
-      }
-      res.json(pkg);
-    });
+    const pkg = await Package.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!pkg) {
+      return res.status(404).json({ message: "Package not found" });
+    }
+    res.json(pkg);
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ message: "Failed to update package", error: error.message });
+    res.status(500).json({ message: "Failed to update package", error: error.message });
   }
 };
 
 // Delete a package (Admin-only access)
 exports.deletePackage = async (req, res) => {
   try {
-    // Admin check
-    authenticateAdmin(req, res, async () => {
-      const pkg = await Package.findByIdAndDelete(req.params.id);
-      if (!pkg) {
-        return res.status(404).json({ message: "Package not found" });
-      }
-      res.json({ message: "Package deleted" });
-    });
+    const pkg = await Package.findByIdAndDelete(req.params.id);
+    if (!pkg) {
+      return res.status(404).json({ message: "Package not found" });
+    }
+    res.json({ message: "Package deleted" });
   } catch (error) {
     console.error(error);
-    res
-      .status(500)
-      .json({ message: "Failed to delete package", error: error.message });
+    res.status(500).json({ message: "Failed to delete package", error: error.message });
   }
 };
 
-// // Middleware to authenticate admin
-// const authenticateAdmin = (req, res, next) => {
-//     const { username, password } = req.body;
-//     if (username === "admin" && password === "password") {
-//         next();  // Proceed to the next middleware/handler (package operations)
-//     } else {
-//         return res.status(401).json({ message: "Unauthorized access" });
-//     }
-// };
-
-// Admin-only route for adding a package
-exports.addPackage = async (req, res) => {
-  authenticateAdmin(req, res, async () => {
-    try {
-      const pkg = new Package(req.body);
-      await pkg.save();
-      res.json(pkg);
-    } catch (error) {
-      console.error(error);
-      res
-        .status(500)
-        .json({ message: "Failed to create package", error: error.message });
-    }
-  });
+module.exports = {
+  adminLogin,
+  getAllPackages,
+  getPackageById,
+  addPackage,
+  updatePackage,
+  deletePackage,
+  authenticateAdmin,
 };
-
-// Similar approach for updatePackage and deletePackage

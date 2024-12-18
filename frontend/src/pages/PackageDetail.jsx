@@ -1,86 +1,6 @@
-// import React, { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
-// import { fetchPackageById } from "../services/api";
-
-// const PackageDetail = () => {
-//   const { id } = useParams();
-//   const [packageDetail, setPackageDetail] = useState(null);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-
-//   useEffect(() => {
-//     const getPackageDetail = async () => {
-//       try {
-//         setLoading(true);
-//         const data = await fetchPackageById(id);
-//         setPackageDetail(data);
-//       } catch (error) {
-//         setError("Failed to fetch package details. Please try again later.");
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     getPackageDetail();
-//   }, [id]);
-
-//   if (loading) {
-//     return (
-//       <div className="text-center text-lg text-charcoal">
-//         <span>Loading...</span>
-//       </div>
-//     );
-//   }
-
-//   if (error) {
-//     return (
-//       <div className="text-center text-lg text-red-600">
-//         <span>{error}</span>
-//       </div>
-//     );
-//   }
-
-//   if (!packageDetail) {
-//     return (
-//       <div className="text-center text-lg text-red-600">
-//         <span>No package found.</span>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="container mx-auto p-6 max-w-3xl bg-beige rounded-lg shadow-xl mt-10">
-//       <h1 className="text-4xl font-semibold text-charcoal mb-6">{packageDetail.title}</h1>
-//       {packageDetail.image ? (
-//         <img
-//           src={packageDetail.image}
-//           alt={packageDetail.title}
-//           className="w-full h-80 object-cover rounded-lg shadow-md mb-6"
-//         />
-//       ) : (
-//         <div className="w-full h-80 bg-gray-200 rounded-lg shadow-md mb-6 flex justify-center items-center">
-//           <span className="text-lg text-gray-500">No Image Available</span>
-//         </div>
-//       )}
-//       <p className="text-lg text-charcoal mb-6">{packageDetail.description}</p>
-//       <p className="text-xl font-bold text-charcoal">
-//         Price: <span className="text-sage-green">${packageDetail.price}</span>
-//       </p>
-
-//       <div className="mt-8 flex justify-center">
-//         <button className="bg-sage-green text-white px-6 py-3 rounded-lg shadow-md hover:bg-gunmetal-gray transition duration-300">
-//           Book Now
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default PackageDetail;
-
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { fetchAllPackages } from "../services/api";
+import { fetchAllPackages } from "../services/api"; // Ensure this function is correctly fetching data from the backend
 
 const PackageList = () => {
   const [packages, setPackages] = useState([]);
@@ -88,29 +8,32 @@ const PackageList = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Fetch all packages when component mounts
     const getAllPackages = async () => {
       try {
-        setLoading(true);
-        const data = await fetchAllPackages();
-        setPackages(data);
+        setLoading(true);  // Set loading state to true before fetching data
+        const data = await fetchAllPackages();  // Fetch data from the API
+        setPackages(data);  // Update state with fetched data
       } catch (error) {
-        setError("Failed to fetch packages. Please try again later.");
+        setError("Failed to fetch packages. Please try again later.");  // Set error message if API call fails
       } finally {
-        setLoading(false);
+        setLoading(false);  // Set loading to false after fetching
       }
     };
 
-    getAllPackages();
-  }, []);
+    getAllPackages();  // Trigger the fetch function
+  }, []);  // Empty dependency array means this runs only once when the component mounts
 
+  // Loading state rendering
   if (loading) {
     return (
-      <div className="text-center text-lg text-charcoal">
-        <span>Loading...</span>
+      <div className="text-center text-lg text-gray-700">
+        <span>Loading packages...</span>
       </div>
     );
   }
 
+  // Error handling rendering
   if (error) {
     return (
       <div className="text-center text-lg text-red-600">
@@ -119,22 +42,25 @@ const PackageList = () => {
     );
   }
 
+  // If no packages are found
   if (packages.length === 0) {
     return (
       <div className="text-center text-lg text-red-600">
-        <span>No packages found.</span>
+        <span>No packages available at the moment.</span>
       </div>
     );
   }
 
+  // Main content when packages are loaded successfully
   return (
     <div className="container mx-auto p-6 max-w-4xl">
-      <h1 className="text-4xl font-semibold text-charcoal mb-6">
+      <h1 className="text-4xl font-semibold text-gray-800 mb-6">
         Available Packages
       </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {packages.map((pkg) => (
-          <div key={pkg._id} className="bg-beige rounded-lg shadow-xl p-4">
+          <div key={pkg._id} className="bg-white rounded-lg shadow-xl p-4">
+            {/* Displaying Image if available */}
             {pkg.image ? (
               <img
                 src={pkg.image}
@@ -148,17 +74,25 @@ const PackageList = () => {
                 </span>
               </div>
             )}
-            <h2 className="text-2xl font-semibold text-charcoal mb-2">
+
+            {/* Package Title */}
+            <h2 className="text-2xl font-semibold text-gray-800 mb-2">
               {pkg.title}
             </h2>
-            <p className="text-lg text-charcoal mb-4">{pkg.description}</p>
-            <p className="text-xl font-bold text-charcoal">
-              Price: <span className="text-sage-green">${pkg.price}</span>
+
+            {/* Package Description */}
+            <p className="text-lg text-gray-600 mb-4">{pkg.description}</p>
+
+            {/* Price */}
+            <p className="text-xl font-bold text-gray-800">
+              Price: <span className="text-green-600">${pkg.price}</span>
             </p>
+
+            {/* View Details Button */}
             <div className="mt-4 flex justify-center">
               <Link
-                to={`/packages/${pkg._id}`}
-                className="bg-sage-green text-white px-6 py-3 rounded-lg shadow-md hover:bg-gunmetal-gray transition duration-300"
+                to={`/packages/${pkg._id}`}  // Link to the individual package details
+                className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-green-800 transition duration-300"
               >
                 View Details
               </Link>

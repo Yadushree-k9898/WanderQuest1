@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import backgroundImage from "../assets/background.jpg"; // Correct path to the image
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -9,36 +8,47 @@ const Contact = () => {
   });
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission (e.g., send to backend or email)
-    alert('Message sent!');
+    // Enhanced form submission logic
+    console.log('Form submitted:', formData);
+    // You could add form validation, API call, etc.
+    alert('Message sent successfully!');
+    
+    // Optional: Reset form after submission
+    setFormData({
+      name: '',
+      email: '',
+      message: ''
+    });
   };
 
   return (
-    <div
-      className="min-h-screen p-6"
-      style={{
-        backgroundImage: `url(${backgroundImage})`, // Use imported image
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
+    <div 
+      className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-black to-zinc-900 p-4"
     >
-      <div className="bg-black bg-opacity-50 min-h-screen p-6">
-        <h1 className="text-4xl font-semibold text-white mb-8">Contact Us</h1>
-        <p className="text-lg text-white mb-6">
-          Have questions or need assistance? Get in touch with us!
-        </p>
-        <form onSubmit={handleSubmit} className="space-y-4 max-w-lg mx-auto bg-white bg-opacity-90 p-6 rounded-lg shadow-lg">
+      <div className="w-full max-w-md bg-zinc-800/95 rounded-xl shadow-2xl shadow-black/50 p-8">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-white mb-4">Contact Us</h1>
+          <p className="text-zinc-400">
+            Have questions or need assistance? We're here to help!
+          </p>
+        </div>
+        
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-lg text-charcoal" htmlFor="name">
-              Name
+            <label 
+              htmlFor="name" 
+              className="block text-sm font-medium text-zinc-300 mb-2"
+            >
+              Full Name
             </label>
             <input
               type="text"
@@ -46,13 +56,18 @@ const Contact = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="w-full p-3 rounded-lg border border-charcoal"
               required
+              className="w-full px-4 py-3 bg-zinc-700 text-white border-none rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 transition duration-300"
+              placeholder="Enter your full name"
             />
           </div>
+
           <div>
-            <label className="block text-lg text-charcoal" htmlFor="email">
-              Email
+            <label 
+              htmlFor="email" 
+              className="block text-sm font-medium text-zinc-300 mb-2"
+            >
+              Email Address
             </label>
             <input
               type="email"
@@ -60,27 +75,34 @@ const Contact = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full p-3 rounded-lg border border-charcoal"
               required
+              className="w-full px-4 py-3 bg-zinc-700 text-white border-none rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 transition duration-300"
+              placeholder="you@example.com"
             />
           </div>
+
           <div>
-            <label className="block text-lg text-charcoal" htmlFor="message">
-              Message
+            <label 
+              htmlFor="message" 
+              className="block text-sm font-medium text-zinc-300 mb-2"
+            >
+              Your Message
             </label>
             <textarea
               id="message"
               name="message"
               value={formData.message}
               onChange={handleChange}
-              className="w-full p-3 rounded-lg border border-charcoal"
-              rows="4"
               required
+              rows="4"
+              className="w-full px-4 py-3 bg-zinc-700 text-white border-none rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 transition duration-300 resize-none"
+              placeholder="Share your thoughts or questions..."
             ></textarea>
           </div>
+
           <button
             type="submit"
-            className="w-full py-3 text-white bg-charcoal rounded-lg hover:bg-beige transition duration-300"
+            className="w-full py-3 bg-emerald-800 text-white font-semibold rounded-lg hover:bg-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-opacity-50 transition duration-300 ease-in-out transform hover:scale-105"
           >
             Send Message
           </button>

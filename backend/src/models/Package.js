@@ -13,14 +13,16 @@ const PackageSchema = new mongoose.Schema({
     ],
     required: true,
     validate: {
-      // Validate that each date in availableDates is an actual Date object
+      // Validate that each date in availableDates is a valid Date object and that endDate >= startDate
       validator: function (dates) {
         return dates.every(
           (date) =>
-            date.startDate instanceof Date && date.endDate instanceof Date
+            date.startDate instanceof Date &&
+            date.endDate instanceof Date &&
+            date.endDate >= date.startDate // Ensure endDate is greater than or equal to startDate
         );
       },
-      message: "Each date in availableDates must be a valid Date object.",
+      message: "Each date in availableDates must be a valid Date object, and endDate must be after or equal to startDate.",
     },
   },
   image: { type: String, required: true },
