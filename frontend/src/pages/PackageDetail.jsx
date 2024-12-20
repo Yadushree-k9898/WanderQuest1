@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { fetchAllPackages } from "../services/api"; // Ensure this function is correctly fetching data from the backend
+import { fetchPackages } from "../services/api";  // Make sure to import fetchPackages
+import { fetchAllPackages } from "../services/api";
+
+
 
 const PackageList = () => {
   const [packages, setPackages] = useState([]);

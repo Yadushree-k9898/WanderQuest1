@@ -1,15 +1,31 @@
-// // AdminPrivateRoute.js
-// import React from "react";
+
+// import React, { useEffect, useState } from "react";
 // import { Navigate } from "react-router-dom";
 
 // const AdminPrivateRoute = ({ children }) => {
-//   // Retrieve the token and role from localStorage
-//   const token = localStorage.getItem("token");
-//   const role = localStorage.getItem("role"); // Ensure the role is stored as "role"
+//   const [loading, setLoading] = useState(true);
+//   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-//   // Check if the user is authenticated and has an "admin" role
-//   if (!token || role !== "admin") {
-//     // If not authenticated or not an admin, redirect to the login page
+//   useEffect(() => {
+//     const token = localStorage.getItem("token");
+//     const role = localStorage.getItem("role");
+
+//     if (token && role === "admin") {
+//       setIsAuthenticated(true);
+//     } else {
+//       setIsAuthenticated(false);
+//     }
+
+//     setLoading(false); // Set loading to false after the check
+//   }, []);
+
+//   // While the authentication check is in progress, show a loading state
+//   if (loading) {
+//     return <div>Loading...</div>;
+//   }
+
+//   // If not authenticated or not an admin, redirect to login page
+//   if (!isAuthenticated) {
 //     return <Navigate to="/login" replace />;
 //   }
 
@@ -22,19 +38,26 @@
 
 
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import { useAuth } from "../contexts/authContext"; // Use the existing AuthContext
 
 const AdminPrivateRoute = ({ children }) => {
-  // Retrieve the token and role from localStorage
-  const token = localStorage.getItem("token");
-  const role = localStorage.getItem("role");
+  const { isAuthenticated, userRole } = useAuth(); // Access auth context
+  const [loading, setLoading] = useState(true); // Loading state for the initial check
 
-  // Check if the token and role are valid
-  const isAuthenticated = token && role === "admin";
+  useEffect(() => {
+    // Set loading to false after the first render
+    setLoading(false);
+  }, []);
 
-  // If the user is not authenticated or not an admin, redirect to login page
-  if (!isAuthenticated) {
+  // While loading, show a loading state
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  // If not authenticated or not an admin, redirect to login page
+  if (!isAuthenticated || userRole !== "admin") {
     return <Navigate to="/login" replace />;
   }
 
@@ -43,3 +66,4 @@ const AdminPrivateRoute = ({ children }) => {
 };
 
 export default AdminPrivateRoute;
+    
